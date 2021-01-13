@@ -4,25 +4,56 @@ import { connect } from "react-redux";
 import { handleFormData } from "../../actions/index";
 import React, { Component } from "react";
 
+import { ctreateStream } from "../../actions/index";
+
 class StreamCreate extends Component {
   render() {
     const { dispatch, id } = this.props;
-    console.log(id);
     return (
       <div>
         <Form
-          // initialValues={{ title: "", description: "" }}
-          onSubmit={({ title, description }) => {
-            dispatch(handleFormData(id, title, description));
+          onSubmit={(values) => {
+            dispatch(handleFormData(id, values));
+            dispatch(ctreateStream(values));
           }}
-          validate={({})}
+          validate={({ title, description }) => validate(title, description)}
           render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit} className="ui form">
-              <label>title</label>
-              <Field name="title" component="input" type="text" />
-              <label>Description</label>
+            <form onSubmit={handleSubmit} className="ui form error">
+              <Field name="title">
+                {({ input, meta }) => (
+                  <div
+                    className={`field ${
+                      meta.error && meta.touched ? "error" : ""
+                    }`}
+                  >
+                    <label>title</label>
+                    <input {...input} type="text" autoComplete="off" />
+                    {meta.error && meta.touched && (
+                      <span className="ui error message head">
+                        {meta.error}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </Field>
 
-              <Field name="description" component="input" type="text" />
+              <Field name="description">
+                {({ input, meta }) => (
+                  <div
+                    className={`field ${
+                      meta.error && meta.touched ? "error" : ""
+                    }`}
+                  >
+                    <label>Description</label>
+                    <input {...input} type="text" autoComplete="off" />
+                    {meta.error && meta.touched && (
+                      <span className="ui error message head">
+                        {meta.error}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </Field>
               <button type="submit" className="ui button">
                 Submit
               </button>
@@ -37,6 +68,15 @@ const validate = (title, description) => {
   const errors = {};
   if (!description) {
     errors.description = "You must enter a description";
+  }
+  if (!title) {
+    errors.title = "You must enter a title ";
+  }
+  if (Number(title)) {
+    errors.title = "Needs to be a string";
+  }
+  if (Number(description)) {
+    errors.description = "Needs to be a string";
   }
   return errors;
 };

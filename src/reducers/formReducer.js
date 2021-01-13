@@ -1,5 +1,5 @@
 import { ADD_FORM_DATA } from "../actions/index";
-
+// const initialState = { id: null, title: [], description: [] };
 export const form = (state = {}, action) => {
   switch (action.type) {
     case ADD_FORM_DATA:
@@ -8,8 +8,8 @@ export const form = (state = {}, action) => {
         ...state,
         [id]: {
           ...state[id],
-          title,
-          description,
+          ...title,
+          ...description,
         },
       };
     default:
