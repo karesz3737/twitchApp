@@ -6,6 +6,7 @@ class StreamForm extends Component {
     return (
       <div>
         <Form
+          initialValues={this.props.initialValues}
           onSubmit={(values) => {
             this.props.onSubmit(values);
           }}
@@ -47,7 +48,7 @@ class StreamForm extends Component {
                   </div>
                 )}
               </Field>
-              <button type="submit" className="ui button">
+              <button type="submit" className="ui button primary">
                 Submit
               </button>
             </form>

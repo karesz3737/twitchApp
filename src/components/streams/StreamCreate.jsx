@@ -1,88 +1,18 @@
-import { Form, Field } from "react-final-form";
 import { connect } from "react-redux";
-
-import { handleFormData } from "../../actions/index";
 import React, { Component } from "react";
-
 import { ctreateStream } from "../../actions/index";
-
+import StreamForm from "./StreamForm";
 class StreamCreate extends Component {
+  onSubmit = (formValues) => {
+    this.props.ctreateStream(formValues);
+  };
   render() {
-    const { dispatch, id } = this.props;
     return (
       <div>
-        <Form
-          onSubmit={(values) => {
-            dispatch(handleFormData(id, values));
-            dispatch(ctreateStream(values));
-          }}
-          validate={({ title, description }) => validate(title, description)}
-          render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit} className="ui form error">
-              <Field name="title">
-                {({ input, meta }) => (
-                  <div
-                    className={`field ${
-                      meta.error && meta.touched ? "error" : ""
-                    }`}
-                  >
-                    <label>title</label>
-                    <input {...input} type="text" autoComplete="off" />
-                    {meta.error && meta.touched && (
-                      <span className="ui error message head">
-                        {meta.error}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </Field>
-
-              <Field name="description">
-                {({ input, meta }) => (
-                  <div
-                    className={`field ${
-                      meta.error && meta.touched ? "error" : ""
-                    }`}
-                  >
-                    <label>Description</label>
-                    <input {...input} type="text" autoComplete="off" />
-                    {meta.error && meta.touched && (
-                      <span className="ui error message head">
-                        {meta.error}
-                      </span>
-                    )}
-                  </div>
-                )}
-              </Field>
-              <button type="submit" className="ui button">
-                Submit
-              </button>
-            </form>
-          )}
-        ></Form>
+        <h3>Create a Stream</h3>
+        <StreamForm onSubmit={this.onSubmit} />
       </div>
     );
   }
 }
-const validate = (title, description) => {
-  const errors = {};
-  if (!description) {
-    errors.description = "You must enter a description";
-  }
-  if (!title) {
-    errors.title = "You must enter a title ";
-  }
-  if (Number(title)) {
-    errors.title = "Needs to be a string";
-  }
-  if (Number(description)) {
-    errors.description = "Needs to be a string";
-  }
-  return errors;
-};
-const mapStateToProps = ({ auth }) => {
-  return {
-    id: auth ? auth.userId : null,
-  };
-};
-export default connect(mapStateToProps)(StreamCreate);
+export default connect(null, { ctreateStream })(StreamCreate);
